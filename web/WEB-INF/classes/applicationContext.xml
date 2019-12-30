@@ -48,45 +48,78 @@
     <bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
-<!--&lt;!&ndash;  配置通知  &ndash;&gt;-->
-<!--    <tx:advice id="txAdvice" transaction-manager="transactionManager">-->
-<!--        <tx:attributes>-->
-<!--            <tx:method name="save*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="persists*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="update*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="modify*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="delete*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="remove*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>-->
-<!--            <tx:method name="get*" isolation="REPEATABLE_READ" read-only="true" propagation="REQUIRED"/>-->
-<!--            <tx:method name="find*" isolation="REPEATABLE_READ" read-only="true" propagation="REQUIRED"/>-->
-<!--        </tx:attributes>-->
-<!--    </tx:advice>-->
-<!--&lt;!&ndash;  织入配置  &ndash;&gt;-->
-<!--    <aop:config>-->
-<!--        <aop:pointcut id="txpc" expression="execution(* com.roe.service.impl.*ServiceImpl.*(..))"/>-->
-<!--        <aop:advisor advice-ref="txAdvice" pointcut-ref="txpc"></aop:advisor>-->
-<!--    </aop:config>-->
+<!--  配置通知  -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="persists*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="update*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="modify*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="delete*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="remove*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="get*" isolation="REPEATABLE_READ" read-only="true" propagation="REQUIRED"/>
+            <tx:method name="find*" isolation="REPEATABLE_READ" read-only="true" propagation="REQUIRED"/>
+            <tx:method name="*" isolation="REPEATABLE_READ" read-only="false" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+<!--  织入配置  -->
+    <aop:config>
+        <aop:pointcut id="txpc" expression="execution(* com.roe.service.impl.*ServiceImpl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txpc"></aop:advisor>
+    </aop:config>
 <!--========================================================================================================-->
     <!--  注解事务  -->
     <!-- 开启注解事务 -->
-    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+<!--    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>-->
 
     <!--  action配置  -->
-    <bean name="customerAction" class="com.roe.action.CustomerAction">
+    <bean name="customerAction" class="com.roe.action.CustomerAction" scope="prototype">
         <property name="cs" ref="customerService"></property>
     </bean>
+    <bean name="userAction" class="com.roe.action.UserAction" scope="prototype">
+        <property name="us" ref="userService"></property>
+    </bean>
+    <bean name="baseDictAction" class="com.roe.action.BaseDictAction" scope="prototype">
+        <property name="baseDictService" ref="baseDictService"></property>
+    </bean>
+    <bean name="linkManAction" class="com.roe.action.LinkManAction" scope="prototype">
+        <property name="lms" ref="linkManService"></property>
+    </bean>
+    <bean name="saleVisitAction" class="com.roe.action.SaleVisitAction" scope="prototype">
+        <property name="svs" ref="saleVisitService"></property>
+    </bean>
 
-<!--  service配置  -->
-    <bean name="customerService" class="com.roe.service.CustomerServiceImpl">
+    <!--  service配置  -->
+    <bean name="customerService" class="com.roe.service.impl.CustomerServiceImpl">
         <property name="cd" ref="customerDao"></property>
     </bean>
-
-
-<!--  dao  -->
-    <bean name="customerDao" class="com.roe.dao.CustomerDaoImpl">
-        <property name="sessionFactory" ref="sessionFactory"></property>
+    <bean name="userService" class="com.roe.service.impl.UserServiceImpl">
+        <property name="ud" ref="userDao"></property>
+    </bean>
+    <bean name="baseDictService" class="com.roe.service.impl.BaseDictServiceImpl">
+        <property name="bdd" ref="baseDictDao"></property>
+    </bean>
+    <bean name="linkManService" class="com.roe.service.impl.LinkManServiceImpl">
+        <property name="linkManDao" ref="linkManDao"></property>
+    </bean>
+    <bean name="saleVisitService" class="com.roe.service.impl.SaleVisitServiceImpl">
+        <property name="svd" ref="saleVisitDao"></property>
     </bean>
 
-
-
+    <!--  dao  -->
+    <bean name="customerDao" class="com.roe.dao.impl.CustomerDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="userDao" class="com.roe.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="baseDictDao" class="com.roe.dao.impl.BaseDictDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="linkManDao" class="com.roe.dao.impl.LinkManDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean name="saleVisitDao" class="com.roe.dao.impl.SaleVisitDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
 </beans>

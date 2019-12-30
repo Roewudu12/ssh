@@ -38,7 +38,7 @@
 					<TD vAlign=top width="100%" bgColor=#ffffff>
 						<TABLE cellSpacing=0 cellPadding=5 width="100%" border=0>
 							<TR>
-								<TD class=manageHead>当前位置：客户管理 &gt; 客户行业统计</TD>
+								<TD class=manageHead>当前位置：客户管理 &gt; <s:property value="#parameters.industryOrSource[0]=='source'?'客户来源统计':'客户行业统计'"></s:property></TD>
 							</TR>
 							<TR>
 								<TD height=2></TD>
@@ -96,5 +96,6 @@
 				</TR>
 			</TBODY>
 		</TABLE>
+<s:debug></s:debug>
 </BODY>
 </HTML>

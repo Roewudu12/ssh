@@ -10,9 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.List;
+
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
     private Customer customer = new Customer();
     private CustomerService cs;
+
+    //使用属性驱动接受parameter中控制统计来源/行业的值
+    private String industryOrSource;
 
     //使用属性驱动接受分页信息
     private Integer currentPage;
@@ -31,6 +36,35 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
         return "list";
     }
 
+    public String add() throws Exception {
+        //直接调用Service，保存Customer对象
+        cs.save(customer);
+        //重定向到客户列表Action
+        return "toList";
+    }
+
+    public String toEdit() throws Exception {
+        //调用Service根据id获得客户对象
+       Customer c = cs.getById(customer.getCust_id());
+        //将对象放到域中
+        ActionContext.getContext().put("customer",c);
+        return "edit";
+    }
+
+    public String delete() throws Exception {
+        //调用Service对象删除客户
+        cs.delete(customer);
+        //重定向到列表页面
+        return "toList";
+    }
+
+    public String industryCount() throws Exception {
+        List<Object[]> list = cs.getIndustryCount(industryOrSource);
+
+        ActionContext.getContext().put("list",list);
+
+        return "industryCount";
+    }
 
     public void setCs(CustomerService cs) {
         this.cs = cs;
@@ -55,5 +89,13 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getIndustryOrSource() {
+        return industryOrSource;
+    }
+
+    public void setIndustryOrSource(String industryOrSource) {
+        this.industryOrSource = industryOrSource;
     }
 }
